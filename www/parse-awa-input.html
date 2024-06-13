@@ -1,0 +1,31 @@
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<title>CRM Upload</title>
+</head>
+<body>
+
+<TABLE border=0 width=100>
+<TR><TD>
+
+<FORM method="POST" action="/crm/mwerkcrm/parse-awa.php" enctype="multipart/form-data" >
+<input type="hidden" name="page" value="uploadporting"  id="page">
+<input type="hidden" name="action" value="upload">
+<input type="hidden" name="tarifid" value="63369"  id="tarifid">
+Aktuelles Lieferdatum :
+<input type="text" name="wanteddate" value="27.02.2015" >
+<BR>
+Datei auswählen<BR>
+<input name="upfile" type="file" size="50" maxlength="1048576" accept="text/*">
+<INPUT type="submit"  value="upload" class="button" >
+
+</FORM>
+</TD></TR>
+<TR><TD>Die Datei darf maximal 1MB gross sein.</TD></TR>
+</TABLE>
+</TD></TR>
+</TABLE>
+
+</body>
+</html>
+	

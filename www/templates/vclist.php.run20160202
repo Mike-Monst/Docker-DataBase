@@ -1,0 +1,757 @@
+<?php
+
+$bgcolor='ffeebb';
+
+// vcstate:
+// <=10 : not to be used in calc
+//
+//  1 : pending_bterror
+//  5 : cancelled
+//  6 : rejected
+//  9 : ceased
+
+// >10 : to be used in cli double
+//
+//  11: new
+//  12: pending (bw,crsum BW upgrade)
+//  13: reserved
+
+// >20 : to be used in calc
+//
+//  21: pending (ports Port upgrade)
+//  22: ordered
+//  23: committed (commitdate BT)
+//  24: installed (installdate BT)
+//  25: vci issued (prod BT)
+//  26: productive (configured)
+
+//  31: precease
+
+
+
+//  $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state>9 and vc_state <22";
+  $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where 1";
+  
+echo "AKT $action";
+
+  if ($action=='searchvc')
+    {
+    $repstring='';
+    $sterror=0;
+    if ($vc_batch_visp!='')
+      {
+      $st1="vc_batch_visp like '$vc_batch_visp'";
+      }
+    else
+      {
+      $st1=1;
+      $sterror++;
+      }
+    if ($vc_visprefnum!='')
+      {
+      $st2="vc_visprefnum like '$vc_visprefnum'";
+      }
+    else
+      {
+      $st2=1;
+      $sterror++;
+      }
+    if ($vc_conn_surname!='')
+      {
+      $st3="vc_conn_surname like '%$vc_conn_surname%'";
+      }
+    else
+      {
+      $st3=1;
+      $sterror++;
+      }
+    if ($vc_conn_firstname!='')
+      {
+      $st4="vc_conn_firstname like '%$vc_conn_firstname%'";
+      }
+    else
+      {
+      $st4=1;
+      $sterror++;
+      }
+    if ($vc_conn_street!='')
+      {
+      $st5="vc_conn_street like '%$vc_conn_street%'";
+      }
+    else
+      {
+      $st5=1;
+      $sterror++;
+      }
+    if ($vc_conn_city!='')
+      {
+      $st6="vc_conn_city like '%$vc_conn_city%'";
+      }
+    else
+      {
+      $st6=1;
+      $sterror++;
+      }
+    if ($vc_conn_postcode!='')
+      {
+      $st7="vc_conn_postcode like '$vc_conn_postcode%'";
+      }
+    else
+      {
+      $st7=1;
+      $sterror++;
+      }
+    if ($location_id!='')
+      {
+      $st8="loc_id=$location_id";
+      }
+    else
+      {
+      $st8=1;
+      $sterror++;
+      }
+    if (($vc_commitdate!='')||(($orderdatefrom!='')&&($orderdateto!='')))
+      {
+      if ($vc_commitdate=='')
+        {
+        $vc_commitdatefrom=$sertimenull-(86400*$orderdatefrom);
+        $vc_commitdateto=86400+$sertimenull-(86400*$orderdateto);
+        $vc_commitdatefromiso=get_isodate($vc_commitdatefrom);
+        $vc_commitdatetoiso=get_isodate($vc_commitdateto);
+        $repstring=$repstring."Orderdate $vc_commitdatefromiso - $vc_commitdatetoiso";
+        }
+      else
+        {
+        $vc_commitdatefrom=get_sertime($vc_commitdate);
+        $vc_commitdateto=$vc_commitdatefrom+86400;
+        }
+      $st9="(vc_commitdate >= '$vc_commitdatefrom' and vc_commitdate < '$vc_commitdateto')";
+      }
+    else
+      {
+      $st9=1;
+      $sterror++;
+      }
+    if (($vc_reqdeliverydate!='')||(($reqdeliverydatefrom!='')&&($reqdeliverydateto!='')))
+      {
+      if ($vc_reqdeliverydate=='')
+        {
+        $vc_reqdeliverydatefrom=$sertimenull-(86400*$reqdeliverydatefrom);
+        $vc_reqdeliverydateto=86400+$sertimenull-(86400*$reqdeliverydateto);
+        $vc_reqdeliveryfromiso=get_isodate($vc_reqdeliveryfrom);
+        $vc_reqdeliverytoiso=get_isodate($vc_reqdeliveryto);
+        $repstring=$repstring."RDDate $vc_reqdeliveryfromiso - $vc_reqdeliverytoiso";
+        }
+      else
+        {
+        $vc_reqdeliverydatefrom=get_sertime($vc_reqdeliverydate);
+        $vc_reqdeliverydateto=$vc_reqdeliverydatefrom+86400;
+        }
+//$st1=get_isodate($vc_reqdeliverydatefrom);
+//$st2=get_isodate($vc_reqdeliverydateto);
+//echo("$st1 $st2");
+      $st10="(vc_reqdeliverydate >= '$vc_reqdeliverydatefrom' and vc_reqdeliverydate < '$vc_reqdeliverydateto')";
+      }
+    else
+      {
+      $st10=1;
+      $sterror++;
+      }
+    if (($vc_commitdate!='')||(($commitdatefrom!='')&&($commitdateto!='')))
+      {
+      if ($vc_commitdate=='')
+        {
+        $vc_commitdatefrom=$sertimenull-(86400*$commitdatefrom);
+        $vc_commitdateto=86400+$sertimenull-(86400*$commitdateto);
+        $vc_commitdatefromiso=get_isodate($vc_commitdatefrom);
+        $vc_commitdatetoiso=get_isodate($vc_commitdateto);
+        $repstring=$repstring."Commitdate $vc_commitdatefromiso - $vc_commitdatetoiso";
+        }
+      else
+        {
+        $vc_commitdatefrom=get_sertime($vc_commitdate);
+        $vc_commitdateto=$vc_commitdatefrom+86400;
+        }
+      $st11="(vc_commitdate >= '$vc_commitdatefrom' and vc_commitdate < '$vc_commitdateto')";
+      }
+    else
+      {
+      $st11=1;
+      $sterror++;
+      }
+    if (($vc_installationdate!='')||(($installationdatefrom!='')&&($installationdateto!='')))
+      {
+      if ($vc_installationdate=='')
+        {
+        $vc_installationdatefrom=$sertimenull-(86400*$installationdatefrom);
+        $vc_installationdateto=86400+$sertimenull-(86400*$installationdateto);
+        $vc_installationdatefromiso=get_isodate($vc_installationdatefrom);
+        $vc_installationdatetoiso=get_isodate($vc_installationdateto);
+        $repstring=$repstring."Installationdate $vc_installationdatefromiso - $vc_installationdatetoiso";
+        }
+      else
+        {
+        $vc_installationdatefrom=get_sertime($vc_installationdate);
+        $vc_installationdateto=$vc_installationdatefrom+86400;
+        }
+      $st12="(vc_installationdate >= '$vc_installationdatefrom' and vc_installationdate < '$vc_installationdateto')";
+      }
+    else
+      {
+      $st12=1;
+      $sterror++;
+      }
+    if (($vc_productiondate!='')||(($productiondatefrom!='')&&($productiondateto!='')))
+      {
+      if ($vc_productiondate=='')
+        {
+        $vc_productiondatefrom=$sertimenull-(86400*$productiondatefrom);
+        $vc_productiondateto=86400+$sertimenull-(86400*$productiondateto);
+        $vc_productiondatefromiso=get_isodate($vc_productiondatefrom);
+        $vc_productiondatetoiso=get_isodate($vc_productiondateto);
+        $repstring=$repstring."Productiondate $vc_productiondatefromiso - $vc_productiondatetoiso";
+        }
+      else
+        {
+        $vc_productiondatefrom=get_sertime($vc_productiondate);
+        $vc_productiondateto=$vc_productiondatefrom+86400;
+        }
+      $st13="(vc_productiondate >= '$vc_productiondatefrom' and vc_productiondate < '$vc_productiondateto')";
+      }
+    else
+      {
+      $st13=1;
+      $sterror++;
+      }
+    if (($vc_canceldate!='')||(($canceldatefrom!='')&&($canceldateto!='')))
+      {
+      if ($vc_canceldate=='')
+        {
+        $vc_canceldatefrom=$sertimenull-(86400*$canceldatefrom);
+        $vc_canceldateto=86400+$sertimenull-(86400*$canceldateto);
+        $vc_canceldatefromiso=get_isodate($vc_canceldatefrom);
+        $vc_canceldatetoiso=get_isodate($vc_canceldateto);
+        $repstring=$repstring."Canceldate $vc_canceldatefromiso - $vc_canceldatetoiso";
+        }
+      else
+        {
+        $vc_canceldatefrom=get_sertime($vc_canceldate);
+        $vc_canceldateto=$vc_canceldatefrom+86400;
+        }
+      $st14="(vc_canceldate >= '$vc_canceldatefrom' and vc_canceldate < '$vc_canceldateto')";
+      }
+    else
+      {
+      $st14=1;
+      $sterror++;
+      }
+    if ($vc_state!='0')
+      {
+      $st15="vc_state like '$vc_state'";      
+      $repstring=$repstring."State ";
+      }
+    else
+      {
+      $st15=1;
+      $sterror++;
+      }
+    if ($vc_state_voice!='0')
+      {
+      $st16="vc_state_voice like '$vc_state_voice'";
+      }
+    else
+      {
+      $st16=1;
+      $sterror++;
+      }
+    if ($product_id!='0')
+      {
+      $st17="product_id like '$product_id'";
+      }
+    else
+      {
+      $st17=1;
+      $sterror++;
+      }
+    if ($productadditional_id!='0')
+      {
+      $st18="productadditional_id like '$productadditional_id'";
+      }
+    else
+      {
+      $st18=1;
+      $sterror++;
+      }
+// aenderung fuer Login realm
+    if ($userrealm_id!='0')
+      {
+      $st19="userrealm_id like '$userrealm_id'";
+      }
+    else
+      {
+      $st19=1;
+      $sterror++;
+      }
+    if ($vc_cbuk!='')
+      {
+      $st20="vc_cbuk like '%$vc_cbuk%'";
+      }
+    else
+      {
+      $st20=1;
+      $sterror++;
+      }
+
+//    if ($sterror==20) { $st8='0000000000'; }
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where $st1 and $st2 and $st3 and $st4 and $st5 and $st6 and $st7 and $st8 and $st9 and $st10 and $st11 and $st12 and $st13 and $st14 and $st15 and $st16 and $st17 and $st18 and $st19 and $st20";
+
+ echo("$query");
+
+    }
+
+
+
+  else if ($action=='searchvc_vp') 
+    {
+    $vpdsuk=get_vpdsuk($vp_id);
+    echo("<h3>Customers on VP $vpdsuk ; ID= $vp_id</h3>");
+    $query="select t1.vc_conn_surname,t1.vc_conn_postcode,t1.vc_cli,t1.vc_conn_street,t1.vc_conn_city,t1.vc_cbuk,t1.productadditional_id,hardware_id,portprovider_id,t1.userbw_id,t1.usercr_id,t1.vc_commitdate,t1.vc_reqdeliverydate,asap_id,t1.vc_installationdate,vc_productiondate,t1.vc_state,t1.vc_vci,t1.vp_id,t1.vcfault_id,t1.vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc as t1 left join dslprov_vp as t2 on t1.vp_id = t2.vp_id where t2.vp_id LIKE '$vp_id'";
+    }
+
+  else if ($action=='searchvc_ex') 
+    {
+    echo("<h3>Customers on exchange $exchange_id</h3>");
+    $query="select t1.vc_conn_surname,t1.vc_conn_postcode,t1.vc_cli,t1.vc_conn_street,t1.vc_conn_city,t1.vc_cbuk,t1.productadditional_id,hardware_id,portprovider_id,t1.userbw_id,t1.usercr_id,t1.vc_commitdate,t1.vc_reqdeliverydate,asap_id,t1.vc_installationdate,vc_productiondate,t1.vc_state,t1.vc_vci,t1.vp_id,t1.vcfault_id,t1.vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc as t1 left join dslprov_vp as t2 on t1.vp_id = t2.vp_id where t2.exchange_id LIKE '$exchange_id'";
+    }
+
+  else if ($action=='searchvc_cal') 
+    {
+    $calname=get_calname($cal_id);
+    echo("<h3>Customers on CAL $calname</h3>");
+    $query="select t1.vc_conn_surname,t1.vc_conn_postcode,t1.vc_cli,t1.vc_conn_street,t1.vc_conn_city,t1.vc_cbuk,t1.productadditional_id,hardware_id,portprovider_id,t1.userbw_id,t1.usercr_id,,t1.vc_commitdate,t1.vc_reqdeliverydate,asap_id,t1.vc_installationdate,vc_productiondate,t1.vc_state,t1.vc_vci,t1.vp_id,t1.vcfault_id,t1.vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc as t1 left join dslprov_vp as t2 on t1.vp_id = t2.vp_id where t2.cal_id LIKE '$cal_id'";
+    }
+// reporting fake
+  else if ($action=='last3')
+    {
+    $time=time();
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state>21";
+    }
+
+  else if ($action=='ordertracking')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where (vc_state>22 and vc_state<26) order by vc_reqdeliverydate";
+    }
+
+  else if ($action=='exceptions')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state<5";
+    }
+  else if ($action=='cancelled')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state=5";
+    }
+  else if ($action=='orderedopen')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state=22 order by vc_reqdeliverydate";
+    }
+  else if ($action=='preorder')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state=21 order by vc_reqdeliverydate";
+    }
+  else if ($action=='orderinstdate')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state=26 order by vc_commitdate";
+    }
+  else if ($action=='orderreinstallation')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state=27 order by vc_commitdate";
+    }
+  else if ($action=='orderinstallationday')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state=28 order by vc_commitdate";
+    }
+  else if ($action=='orderinstallation')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state=29 order by vc_installationdate desc";
+    }
+  else if ($action=='orderprod')
+    {
+    $query="select vc_visprefnum,vc_conn_company,vc_conn_title,vc_conn_surname,vc_conn_firstname,vc_conn_postcode,vc_conn_city,vc_conn_citysubloc,vc_conn_street,vc_conn_houseno,vc_email,product_id,productcap_id,productadditional_id,hardware_id,portprovider_id,vc_reqdeliverydate,asap_id,vc_commitdate,vc_installationdate,vc_productiondate,vc_state,vcfault_id,vc_id,vc_confirmations,vc_conn_contactphonepre,vc_conn_contactphone,vc_comments from dslprov_vc where vc_state>29 AND vc_state<40 order by vc_productiondate desc,vc_conn_surname asc";
+    }
+
+
+  $cresult=mysql_query($query);
+  $number=mysql_num_rows($cresult);
+  
+  if ($limit=='') { $limit=0; }
+  $limitstm=" LIMIT $limit,$limitinterval";
+  $query=$query.$limitstm;
+  $result=mysql_query($query);  
+
+
+  echo("<center>");
+  $cnt=1;
+  $uri=eregi_replace('limit','limitold',$uri);
+  echo("Seite ");
+  for ($z=0;$z<$number;$z=$z+$limitinterval)
+    {
+    $puri=$uri."&limit=$z";
+    echo("<a href=$puri>$cnt</a> ");
+    $cnt++;
+    }
+
+//echo "$query";
+echo("<table border=0 cellpadding=3 cellspacing=3><tr bgcolor=$tcolor0>");
+// VISP , Realm
+
+  echo("<td align=center nowrap><b>Lfd.</b></td>");
+  echo("<td align=center nowrap><b>AuftragNr.</b></td>"); 
+  echo("<td width=100 align=center nowrap><b>Nachname/Fa.</b></td>");
+  echo("<td width=100 align=center nowrap><b>Vorname</b></td>");            
+  echo("<td align=center nowrap><b>PLZ</b></td>");
+  echo("<td align=center nowrap><b>Ort</b></td>");
+  echo("<td align=center nowrap><b>Ortsteil</b></td>");
+  echo("<td align=center nowrap><b>Strasse</b></td>");
+  echo("<td align=center nowrap><b>Nr.</b></td>");
+  echo("<td align=center nowrap><b>email</b></td>");
+  echo("<td align=center nowrap><b>Produkt</b></td>");
+  echo("<td align=center nowrap><b>ProdSub</b></td>"); 
+  echo("<td width=50 align=center nowrap><b>CPE</b></td>");
+  echo("<td align=center nowrap><b>Port.</b></td>");
+  echo("<td align=center nowrap><b>Anz.RN</b></td>");
+  echo("<td align=center nowrap><b>Ltg</b></td>");
+  echo("<td align=center nowrap><b>Tech</b></td>");
+  echo("<td align=center nowrap><b>WunschDatum</b></td>");
+  echo("<td align=center nowrap><b>BestDatum</b></td>");
+  echo("<td align=center nowrap><b>InstDatum</b></td>");
+  echo("<td align=center nowrap><b>ProdDatum</b></td>");
+  echo("<td align=center nowrap><b>Status</b></td>");
+//  echo("<td align=center nowrap><b>Fehler</b></td>");
+  echo("<td align=center nowrap><b>Edit</b></td>");
+if ($action=='exceptions')
+  {
+  $multifeld='ResetStatus';
+  }
+else if ($action=='orderinstallation')
+  {
+  $multifeld='SetProductive';
+  }
+else 
+  {
+  $multifeld='Info';
+  }  
+  echo("<td align=center nowrap><b>$multifeld</b></td>");
+  echo("<!-- <td align=center nowrap><b>ShowVC</b></td>  -->");
+  echo("<td align=center nowrap><b>Kontakt<br>Bemerkungen</b></td>");
+
+  for ($i=0;$i < mysql_num_rows($result);$i++)
+    {
+    $row = mysql_fetch_row($result);
+    $j=0;
+    echo("</tr><tr bgcolor=$bgcolor>");
+    foreach ($row as $value)
+      {
+      if ($j==0)
+        {
+        $k=$i+1+$limit;
+        echo("<td align=center><b>$k</b></td>");
+        echo("<td align=center><a href=index.php?page=1&action=vchistory&vc_visprefnum=$value>$value</a></td>");
+        $vref=$value;
+        }
+      else if ($j==1)
+        {
+        $j01=$value;
+        }
+      else if ($j==2)
+        {
+        $j02=$value;
+        }
+      else if ($j==3)
+        {
+        echo("<td align=center>$j02 $value<br><b>$j01</b></td>");
+        }
+
+      else if ($j==15)
+        {
+        $tvalue=$value;
+        $pprov='';
+        if (strcmp($value,'')==0) { $tvalue='-'; }
+        else 
+          { 
+          $tvalue='ja';
+        $anzpquery="select portprovider_id from dslprov_vc where vc_visprefnum=$vref;";
+
+        $anzprow='';  
+        $pprov='';
+        $anzprow[0]='-';
+        $anzpresult=mysql_query($anzpquery);
+        $anzp=mysql_num_rows($anzpresult);
+        if ($anzp==1) 
+          {
+          $anzprow = mysql_fetch_row($anzpresult);
+          $pprov=$anzprow[0];
+          }
+        
+           
+          }
+        echo("<td align=center> $tvalue $pprov </td>");
+          
+        $anznrquery="select subscriber_number,subscriber_pw,subscriber_prefix,subscriber_postfix from dslprov_vc_subscribernumbers where subscriber_visprefnum=$vref;";
+  
+        $anznrresult=mysql_query($anznrquery);
+        $anznr=mysql_num_rows($anznrresult);
+        
+        
+        $anzlinequery="select line_onsitetech,line_user,line_pw from dslprov_vc_line where line_visprefnum=$vref;";
+
+        $anzlinerow='';  
+        $anzlinerow[0]='NA';
+        $anzlineresult=mysql_query($anzlinequery);
+        $anzline=mysql_num_rows($anzlineresult);
+        if ($anzline==1) {$anzlinerow = mysql_fetch_row($anzlineresult);}
+        
+        if ($anznr<$proda) 
+          {
+          echo("<td align=center><b> $anznr !!! ZU KLEIN </b>");
+          }
+        else
+          {
+          echo("<td align=center> $anznr ");
+          }
+//        if (($action=='orderinstdate')||($action=='orderprod')||($action=='orderinstallationday')||($action=='orderreinstallation')||($action=='orderinstallation'))
+//          {
+          while ($ref = mysql_fetch_row($anznrresult))
+            {
+            print "--<br>$ref[0]<br>$ref[1]<br>$ref[2]/$ref[3]<br>";
+            }
+//          }
+        echo("</td>");  
+          
+        if ($anzline==1)
+          { $anzline='ja'; } else { $anzline='nein'; }
+
+        $linedata='';
+        if (($action=='orderinstdate')||($action=='orderprod')||($action=='orderinstallationday')||($action=='orderreinstallation')||($action=='orderinstallation'))
+          {
+          $linedata="$anzlinerow[1] $anzlinerow[2]";
+          }
+        echo("<td align=center> $anzline $linedata</td>");
+        
+        echo("<td align=center> $anzlinerow[0]</td>");  
+        }
+
+      else if ($j==14)
+        {
+        $tvalue=get_hardware($value);
+        if ($value==0) { $tvalue='-'; }
+        echo("<td align=center>$tvalue</td>");
+        }
+
+      else if ($j==13)
+        {
+        $tvalue=get_producta($value);
+        if ($value==0) { $tvalue='-'; }
+        echo("<td align=center>$tvalue</td>");
+        $proda=3;
+        if ($value==0) { $proda=1; }  # xx telefoniert
+        if ($value==2) { $proda=1; }  # flat1
+
+        }
+      else if (($j==11))
+        {
+        $tvalue=get_product($value);
+        if ($value==0) { $tvalue='-'; }
+        echo("<td align=center>$tvalue<br>");
+        }
+      else if (($j==12))
+        {
+        $tvalue=get_productcap($value);
+        if ($value==0) { $tvalue='-'; }
+        echo("<br>$tvalue</td>");
+        }
+      else if ($j==16)
+        {
+        $j12=$value;
+        }
+
+      else if (($j==17))   # ||($j==14)||($j==15))
+        {
+        $sofort='';
+        $j13=$value;
+        if ($j13==1) { $sofort='s.schnell.w.m.'; }
+        $value=$j12;
+        $tvalue=get_isodate($value);
+        if ($value==0) { $tvalue=''; }
+        echo("<td align=center>$tvalue $sofort</td>");
+        }
+      else if (($j==18)||($j==19)||($j==20))
+        {
+#        $tvalue=get_isodate($value);
+$tvalue=$value;
+$tparts=explode(".",$tvalue);
+$tvalue=$tparts[2].'.'.$tparts[1].'.'.$tparts[0];
+        if ($value==0) { $tvalue='-'; }
+        echo("<td align=center>$tvalue</td>");
+if ($j==18)
+  {
+  $bestdate=$tvalue;
+  }
+        }
+      else if ($j==21)
+        {
+        $tvalue=get_vcstate($value);
+        $vcstatevalue=$value;
+        $value="$tvalue($value)";
+        echo("<td align=center>$value</td>");
+        }
+      else if ($j==99)
+        {
+        $query2="select * from dslprov_vp where vp_id LIKE '$value'";
+        $result2=mysql_query($query2);
+        $number2=mysql_num_rows($result2);
+        $rowarray=mysql_fetch_array($result2);
+
+        $vp_state=$rowarray['vp_state'];
+        $vp_state_value=get_vpstate($vp_state);
+        $cal_id=$rowarray['cal_id'];
+        $cal=get_calname($cal_id);
+        if ($cal=='-1') { $cal='none'; }
+        $exchange_id=$rowarray['exchange_id'];
+        $vp_dsuk=$rowarray['vp_dsuk'];
+        $vp_vpi=$rowarray['vp_vpi'];
+        echo("<td align=center>$vp_vpi</td>");
+        echo("<td align=center><a href=index.php?page=7&action=vpshow&vp=$value>$vp_dsuk</a></td>");
+        echo("<td align=center><a href=index.php?page=1&action=searchvp_ex&query=$exchange_id>$exchange_id</a></td>");
+        echo("<td align=center><a href=index.php?page=1&action=searchvp_cal&query=$cal_id>$cal</td>");
+        echo("<td align=center>$vp_state_value($vp_state)</td>");
+        }
+      else if ($j==22)
+        {
+        $tvalue=get_vcfault($value);
+#        echo("<td align=center>$tvalue</td>");
+        }
+      else if ($j==23)
+        {
+        echo("<td align=center><b><a href=index.php?page=3&action=vcupgrade&vc_id=$value>>Edit</a></b></td>");         
+        echo("<!-- <td align=center><b><a href=index.php?page=3&action=vcshow&vc_id=$value>>Show</a></b></td> -->");         
+        }
+
+      else if ($j==24)
+        {
+        if ($action=='exceptions')
+          {
+          echo("<td align=center><a href=index.php?page=$page&action=$action&limit=$limit&resetstate$vcstatevalue=$vref><img border=0 src=images/red.gif></a></td>");
+          }
+        else if ($action=='orderinstallation')
+          {
+          echo("<td align=center>
+          <b>Produktion-Billing</b><br>
+          <form method=get><input type=hidden name=page value='$page'><input type=hidden name=action value='$action'>
+          <input type=hidden name=limit value='$limit'><input type=hidden name=setprod value='$vref'> 
+          SD<input name=syncdl size=5><br>SU<input name=syncup size=5><br>AD<input name=attdl size=5><br>AU<input name=attup size=5>
+          <br>         
+          <input name=setproddate value='$bestdate' size=10>
+          <input type=submit value='SetProd'>
+          </form>
+          <form method=get><input type=hidden name=page value='$page'><input type=hidden name=action value='$action'>
+          <input type=hidden name=limit value='$limit'><input type=hidden name=setprodkrm value='$vref'> 
+          <input name=setproddate value='$bestdate' size=10>
+          <input type=submit value='SetProdKRM'>
+          </form>
+          <form method=get><input type=hidden name=page value='$page'><input type=hidden name=action value='$action'>
+          <input type=hidden name=limit value='$limit'><input type=hidden name=setrepair value='$vref'> 
+          <b>Entst&ouml;rung Ltg.</b><br>
+          mind. 2 Fenster Vorlauf<br>
+          <input name=setrepairdate value='$bestdate' size=10>
+          <select name=setrepairtime>
+          <option value='morgens'>morgens 8-12</option>
+          <option value='nachmittags'>nachmittags 13-17</option>
+          </select>
+          <input type=submit value='SetRepair'>
+          </form>
+          <form method=get><input type=hidden name=page value='$page'><input type=hidden name=action value='$action'>
+          <input type=hidden name=limit value='$limit'><input type=hidden name=setrepairvoice value='$vref'> 
+          <b>Entst&ouml;rung Voip</b><br>
+          Datum/Zeit:<input name=srvdatetime size=10><br>
+          Typ<select name=srvtype>
+          <option value='eingehend'>eingehend</option>
+          <option value='ausgehend'>ausgehend</option>
+          <option value='komplett'>komplett</option>
+          </select><br>
+          ANR<input name=srva size=10><br>
+          BNR<input name=srvb size=10><br>
+          Fehler<select name=srverror>
+          <option value='stille'>Stille</option>
+          <option value='na'>RN nicht erreichbar</option>
+          <option value='occ'>besetzt</option>
+          </select><br>
+          <select name=srvdur>
+          <option value='permanent'>permanent</option>
+          <option value='sporadisch'>sporadisch</option>
+          </select><br>
+           
+          <input type=submit value='SetRepair'>
+          </form>
+
+          </td>");
+          }
+        else if ($action=='orderinstallationday')
+          {
+          echo("<td align=center>
+          <form method=get><input type=hidden name=page value='$page'><input type=hidden name=action value='$action'>
+          <input type=hidden name=limit value='$limit'><input type=hidden name=setnewreq value='$vref'> 
+          <b>neuer Termin</b><br>mind. +5 Werktage
+          <br>         
+          <input name=setnewreqdate value='$bestdate' size=10>
+          <input type=submit value='Set'>
+          </form>
+
+          </td>");
+          }
+        else
+          {  
+          if ($value==0)
+            {
+            echo("<td align=center><a href=index.php?page=$page&action=$action&limit=$limit&changeinfo=$vref><img border=0 src=images/red.gif></a></td>");
+            }
+            else
+            {
+            echo("<td align=center><img border=0 src=images/green.gif></td>");
+            }
+          }
+        }
+
+      else if ($j==25)
+        {
+        $j18=$value;
+        }
+      else if ($j==26)
+        {
+        $j19=$value;
+        }
+      else if ($j==27)
+        {
+        echo("<td align=center>$j18 $j19<br>---<br>$value</td>");
+        }
+              
+      else
+        {
+        echo("<td align=center>$value</td>");
+        }
+      $j++;
+      }
+#      echo("</tr><tr><td align=center>&nbsp;</td><td bgcolor=$bgcolor colspan=18>&nbsp;</td>");
+    }
+  echo("</tr></table>");
+  $cnt=1;
+  $uri=eregi_replace('limit','limitold',$uri);
+  echo("Seite ");
+  for ($z=0;$z<$number;$z=$z+$limitinterval)
+    {
+    $puri=$uri."&limit=$z";
+    echo("<a href=$puri>$cnt</a> ");
+    $cnt++;
+    }
+  echo("</center>");
+     
+?>

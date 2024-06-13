@@ -1,0 +1,40 @@
+stdClass Object
+(
+    [iban] => 
+    [result] => failed
+    [return_code] => 1024
+    [ibanrueck_return_code] => 
+    [checks] => Array
+        (
+            [0] => length
+        )
+
+    [bic_candidates] => Array
+        (
+        )
+
+    [country] => 
+    [bank_code] => 5001051
+    [alternative_bank_code] => 
+    [bank] => 
+    [bank_address] => 
+    [bank_url] => 
+    [branch] => 
+    [branch_code] => 
+    [in_scl_directory] => no
+    [sct] => 
+    [sdd] => 
+    [b2b] => 
+    [account_number] => 648479930
+    [alternative_account_number] => 
+    [account_validation_method] => 
+    [account_validation] => 
+    [length_check] => failed for bank code
+    [account_check] => 
+    [bank_code_check] => 
+    [bic_plausibility_check] => 
+    [data_age] => 
+    [IBANformat] => DEkk BBBB BBBB CCCC CCCC CC
+    [formatcomment] => B = sort code (BLZ), C = account No.
+    [balance] => 9
+)

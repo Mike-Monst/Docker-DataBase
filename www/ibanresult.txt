@@ -1,0 +1,57 @@
+stdClass Object
+(
+    [iban] => DE48500105170648479930
+    [result] => passed
+    [return_code] => 0
+    [ibanrueck_return_code] => 
+    [checks] => Array
+        (
+            [0] => length
+            [1] => bank_code
+            [2] => account_number
+        )
+
+    [bic_candidates] => Array
+        (
+            [0] => stdClass Object
+                (
+                    [bic] => INGDDEFFXXX
+                    [zip] => 60628
+                    [city] => Frankfurt am Main
+                    [wwwcount] => 0
+                    [sampleurl] => 
+                )
+
+        )
+
+    [country] => DE
+    [bank_code] => 50010517
+    [alternative_bank_code] => 
+    [bank] => ING-DiBa
+    [bank_address] => 
+    [bank_url] => 
+    [branch] => 
+    [branch_code] => 
+    [in_scl_directory] => yes
+    [sct] => yes
+    [sdd] => yes
+    [b2b] => yes
+    [account_number] => 648479930
+    [alternative_account_number] => 
+    [account_validation_method] => C1
+    [account_validation] => Methode C1, Variante 1, Konto 0648479930, BLZ
+    50010517, Prüfziffer 9 steht an Position 8, erwartete Prüfziffer: 9.
+    �.berblick über die Berechnung: Nimm die Ziffern auf den Positionen 2
+    bis 7 - hier: 648479 -, multipliziere sie von links nach rechts mit den
+    Gewichten 1,2,1,2,1,2, addiere die Quersummen der Produkte, ziehe 1
+    davon ab, bilde den Rest der Division durch 11, ziehe das Ergebnis von
+    10 ab,  und das Ergebnis modulo 11 ist die erwartete Prüfziffer.
+    [length_check] => passed
+    [account_check] => passed
+    [bank_code_check] => passed
+    [bic_plausibility_check] => 
+    [data_age] => 20131203
+    [IBANformat] => DEkk BBBB BBBB CCCC CCCC CC
+    [formatcomment] => B = sort code (BLZ), C = account No.
+    [balance] => 9
+)

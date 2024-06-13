@@ -1,0 +1,5 @@
+AuthType Basic
+AuthName "Access for crm"
+AuthUserFile /var/wwwsys/htpasswd
+require valid-user
+

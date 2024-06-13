@@ -1,0 +1,131 @@
+
+<?xml version="1.0" encoding="UTF-8"?><?soxtype urn:x-commerceone:document:btsox:Batch.sox$1.0?><?import urn:x-commerceone:document:telcoapis
+ox:ServiceRequestOrder.sox$1.0?>
+<?import urn:x-commerceone:document:com:commerceone:CBL:CBL.sox$1.0?>
+<?import urn:x-commerceone:document:btsox:DSL.sox$1.0?>
+<bat:Batch BatchID = "" NoOfEntries="1"
+    xmlns="urn:x-commerceone:document:com:commerceone:CBL:CBL.sox$1.0"
+    xmlns:bat="urn:x-commerceone:document:btsox:Batch.sox$1.0"
+    xmlns:sro="urn:x-commerceone:document:telcoapisox:ServiceRequestOrder.sox$1.0"
+    xmlns:dsl="urn:x-commerceone:document:btsox:DSL.sox$1.0">
+
+
+	  <PurchaseOrder>
+	   <OrderHeader>
+	    <POIssuedDate>20040818T15:15:43</POIssuedDate>
+	     <RequestedDeliveryDate>Ymd\TH:i:s</RequestedDeliveryDate>
+	      <OrderReference>
+	        <AccountCode>
+	          <Reference>
+	            <RefNum>12345678AC01</RefNum>
+	          </Reference>
+	        </AccountCode>
+	        <BuyerRefNum>
+	          <Reference>
+	            <RefNum>200100002345</RefNum>
+	          </Reference>
+	        </BuyerRefNum>
+	      </OrderReference>
+	      <OrderParty>
+	        <BuyerParty>
+	          <Party>
+	            <ListOfIdentifier>
+	              <Identifier>
+	                <Agency/>
+	                <Ident>O/M999999999</Ident>
+	              </Identifier>
+	            </ListOfIdentifier>
+	            <OrderContact>
+	              <sro:DetailedContact>
+	                <ContactName>Bloggs</ContactName>
+	                <Telephone>02089999999</Telephone>
+	                <sro:Title>Mr</sro:Title>
+	                <sro:FirstName>Joe</sro:FirstName>
+	                <sro:Initials>JS</sro:Initials>
+	              </sro:DetailedContact>
+	            </OrderContact>
+	          </Party>
+	        </BuyerParty>
+	        <SupplierParty>
+	          <Party>
+	            <ListOfIdentifier>
+	              <Identifier>
+	                <Agency/>
+	                <Ident>BT</Ident>
+	              </Identifier>
+	            </ListOfIdentifier>				
+	          </Party>
+	        </SupplierParty>
+	      </OrderParty>
+	      <OrderCurrency>GBP</OrderCurrency>
+	      <OrderLanguage>en</OrderLanguage>
+	      <PartialShipmentAllowed>false</PartialShipmentAllowed>
+	</OrderHeader>
+	<ListOfOrderDetail>
+	<OrderDetail>
+	<sro:ServiceRequestOrder ItemType="Provision">
+	  <LineItemNum>1</LineItemNum>
+	  <SupplierPartNum>
+	    <PartNum>
+	      <Agency/>
+	      <PartID>3</PartID>
+            </PartNum>
+	  </SupplierPartNum>
+	  <Quantity>
+	    <Qty>1</Qty>
+	    <UnitOfMeasure>
+	      <UOM>EA</UOM>
+	    </UnitOfMeasure>
+	  </Quantity>
+	  <sro:Site End="A">
+	    <sro:Id>GB/NW19JA/BCK</sro:Id>
+	    <sro:DetailedContact>
+	      <ContactName>Smith</ContactName>
+	      <Telephone>02089999999</Telephone>
+	      <sro:Title>Mr</sro:Title>
+	      <sro:FirstName>John</sro:FirstName>
+	      <sro:Initials>M</sro:Initials>
+	    </sro:DetailedContact>
+	  </sro:Site>
+	  <sro:Site End="B">
+	    <sro:Address>
+	      <sro:BritishAddress>
+		<sro:PremisesName></sro:PremisesName>
+		<sro:ThoroughfareName>Holly Road</sro:ThoroughfareName>
+		<sro:PostTown>London</sro:PostTown>
+		<sro:PostCode>NW1 3QJ</sro:PostCode>
+	      </sro:BritishAddress>
+	    </sro:Address>
+	    <sro:DetailedContact>
+	      <ContactName>Smith</ContactName>
+	      <Telephone></Telephone>
+	      <sro:Title></sro:Title>
+	      <sro:FirstName></sro:FirstName>
+	      <sro:Initials></sro:Initials>
+	    </sro:DetailedContact>
+	  </sro:Site>
+	  <sro:Features>
+	    <dsl:FeatureSet>	
+	      <dsl:Provision>
+		<dsl:ProvisionGeneral CareLevel="" />
+		<dsl:ProvisionAEnd SPNominatedVP="" />
+		<dsl:ProvisionBEnd>				
+		  <dsl:NTE CheckAlarmAfterInstall="Y">
+		    <dsl:TelephoneNumber>01234567870</dsl:TelephoneNumber>
+		  </dsl:NTE>
+		</dsl:ProvisionBEnd>
+	      </dsl:Provision>
+	    </dsl:FeatureSet>
+	  </sro:Features>
+	</sro:ServiceRequestOrder>
+	<RequestedDeliveryDate>1093443343</RequestedDeliveryDate>
+	<BuyerExpectedUnitPrice>
+	  <Price>
+	    <UnitPrice>0</UnitPrice>
+	  </Price>
+	</BuyerExpectedUnitPrice>
+	</OrderDetail>
+	</ListOfOrderDetail>
+	<OrderSummary><TotalAmount>0</TotalAmount></OrderSummary>
+	</PurchaseOrder>	
+	</bat:Batch>

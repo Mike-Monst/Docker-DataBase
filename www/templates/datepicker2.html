@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+             <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css"/>
+             <link href="http://code.jquery.com/ui/1.10.3/themes/sunny/jquery-ui.css" rel="stylesheet" type="text/css"/>
+             <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+             <script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $(function() {
+      $("#date").datepicker({
+            dateFormat: "dd.mm.yy",
+                  firstDay: 1,
+                        minDate: 0,
+                              showButtonPanel: true,
+                                    closeText: 'Kalender schlien',
+                                          currentText: 'Heute',
+                                                dayNames: ['Sonntag',
+                                                'Montag', 'Dienstag',
+                                                'Mittwoch', 'Donnerstag',
+                                                'Freitag', 'Samstag'],
+                                                      dayNamesMin: ['SO',
+                                                      'MO', 'DI', 'MI',
+                                                      'DO', 'FR', 'SA'],
+                                                            monthNames:
+                                                            ['Januar',
+                                                            'Februar', 'Mz',
+                                                            'April', 'Mai',
+                                                                    'Juni',
+                                                                    'Juli',
+                                                                    'August',
+                                                                    'September',
+                                                                    'Oktober',
+                                                                    'November',
+                                                                    'Dezember'],
+                                                                          showAnim:
+                                                                          'blind'
+                                                                              });
+                                                                                });
+                                                                                });
+                                                                                </script>
+                                            
+                                            
+                                            </head>
+    <body>
+
+<input type="input" id="date" name="my_date" value="20.02.2012"/>
+                </body>
+                </HTML>

@@ -1,0 +1,659 @@
+-- MySQL dump 9.09
+--
+-- Host: db93.puretec.de    Database: db65775458
+-- ------------------------------------------------------
+-- Server version	4.0.17-standard-log
+
+--
+-- Table structure for table `dslprov_batch`
+--
+
+CREATE TABLE dslprov_batch (
+  batch_id int(11) NOT NULL default '0',
+  visp_id int(11) NOT NULL default '0',
+  batch_value varchar(20) NOT NULL default '',
+  PRIMARY KEY  (batch_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_batch`
+--
+
+
+
+
+--
+-- Table structure for table `dslprov_btpop`
+--
+
+CREATE TABLE dslprov_btpop (
+  btpop_id int(11) NOT NULL default '0',
+  btpop_name varchar(32) NOT NULL default '',
+  btpop_productiondate varchar(16) NOT NULL default '',
+  btpop_gbno varchar(16) NOT NULL default '',
+  btpop_state int(2) NOT NULL default '0',
+  btpop_deleted int(2) NOT NULL default '0',
+  btpop_deleteddate varchar(16) NOT NULL default '',
+  PRIMARY KEY  (btpop_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_btpop`
+--
+
+INSERT INTO dslprov_btpop VALUES (1,'London Ilford',0,'GB/E142AA/DBD',1,0,0);
+INSERT INTO dslprov_btpop VALUES (2,'Manchester',0,'GB/M46AL/BBN',1,0,0);
+INSERT INTO dslprov_btpop VALUES (3,'Reading',0,'GB/RG11QB/BBR',1,0,0);
+INSERT INTO dslprov_btpop VALUES (4,'Newcastle',0,'GB/NE15DF/BBT',1,0,0);
+
+--
+-- Table structure for table `dslprov_btproduct`
+--
+
+CREATE TABLE dslprov_btproduct (
+  btproduct_id int(5) NOT NULL default '0',
+  btproduct_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (btproduct_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_btproduct`
+--
+
+INSERT INTO dslprov_btproduct VALUES (1,'BT DataStream Home500');
+INSERT INTO dslprov_btproduct VALUES (2,'BT DataStream Office500');
+INSERT INTO dslprov_btproduct VALUES (3,'BT DataStream Office1000');
+INSERT INTO dslprov_btproduct VALUES (4,'BT DataStream Office2000');
+INSERT INTO dslprov_btproduct VALUES (5,'BT IPStream Home 500');
+INSERT INTO dslprov_btproduct VALUES (6,'BT IPStream Home 1000');
+INSERT INTO dslprov_btproduct VALUES (7,'BT IPStream Office 500');
+INSERT INTO dslprov_btproduct VALUES (8,'BT IPStream Office 1000');
+INSERT INTO dslprov_btproduct VALUES (9,'BT IPStream Office 2000');
+
+--
+-- Table structure for table `dslprov_btuserorderstate`
+--
+
+CREATE TABLE dslprov_btuserorderstate (
+  btuserorderstate_id int(5) NOT NULL default '0',
+  btuserorderstate_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (btuserorderstate_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_btuserorderstate`
+--
+
+INSERT INTO dslprov_btuserorderstate VALUES (1,'ENGS');
+INSERT INTO dslprov_btuserorderstate VALUES (2,'CLSD');
+INSERT INTO dslprov_btuserorderstate VALUES (3,'CNLD');
+INSERT INTO dslprov_btuserorderstate VALUES (4,'WCUS');
+
+--
+-- Table structure for table `dslprov_btuserordertype`
+--
+
+CREATE TABLE dslprov_btuserordertype (
+  btuserordertype_id int(5) NOT NULL default '0',
+  btuserordertype_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (btuserordertype_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_btuserordertype`
+--
+
+INSERT INTO dslprov_btuserordertype VALUES (1,'Provide');
+INSERT INTO dslprov_btuserordertype VALUES (2,'Cease');
+INSERT INTO dslprov_btuserordertype VALUES (3,'Convert');
+
+
+
+--
+-- Table structure for table `dslprov_btuserorderstate`
+--
+
+CREATE TABLE dslprov_btvporderstate (
+  btvporderstate_id int(5) NOT NULL default '0',
+  btvporderstate_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (btvporderstate_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_btuserorderstate`
+--
+
+
+--
+-- Table structure for table `dslprov_btuserordertype`
+--
+
+CREATE TABLE dslprov_btvpordertype (
+  btvpordertype_id int(5) NOT NULL default '0',
+  btvpordertype_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (btvpordertype_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_btuserordertype`
+--
+
+INSERT INTO dslprov_btvpordertype VALUES (1,'New Provide');
+INSERT INTO dslprov_btvpordertype VALUES (2,'Upgrade');
+INSERT INTO dslprov_btvpordertype VALUES (3,'Ports upgrade');
+
+
+
+--
+-- Table structure for table `dslprov_cal`
+--
+
+CREATE TABLE dslprov_cal (
+  cal_id int(11) NOT NULL default '0',
+  bas_id int(11) NOT NULL default '0',
+  pop_id int(11) NOT NULL default '0',
+  btpop_id int(11) NOT NULL default '0',
+  cal_name varchar(32) NOT NULL default '',
+  cal_csac varchar(32) NOT NULL default '',
+  cal_productiondate varchar(16) NOT NULL default '',
+  cal_maxvps int(5) NOT NULL default '0',
+  cal_bw int(5) NOT NULL default '0',
+  cal_state int(2) NOT NULL default '0',
+  cal_deleted int(2) NOT NULL default '0',
+  cal_deleteddate varchar(16) NOT NULL default '',
+  PRIMARY KEY  (cal_id),
+  KEY pop_id (pop_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_cal`
+--
+
+
+--
+-- Table structure for table `dslprov_cliranges`
+--
+
+CREATE TABLE dslprov_cliranges (
+  exchange_id varchar(8) NOT NULL default '',
+  cliranges_from varchar(16) NOT NULL default '',
+  cliranges_to varchar(16) NOT NULL default '',
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_exchange`
+--
+
+CREATE TABLE dslprov_exchange (
+  exchange_id varchar(8) NOT NULL default '',
+  exchange_name varchar(64) NOT NULL default '',
+  exchange_fname varchar(64) NOT NULL default '',
+  exchange_county varchar(64) NOT NULL default '',
+  exchange_targetdatecomm varchar(16) NOT NULL default '',
+  exchange_commissioned varchar(8) NOT NULL default '',
+  exchange_acceptorders varchar(8) NOT NULL default '',
+  PRIMARY KEY  (exchange_id),  
+) TYPE=InnoDB;
+
+
+
+
+
+--
+-- Table structure for table `dslprov_pop`
+--
+
+CREATE TABLE dslprov_pop (
+  pop_id int(11) NOT NULL default '0',
+  pop_name varchar(32) NOT NULL default '',
+  pop_productiondate varchar(16) NOT NULL default '',
+  pop_state int(2) NOT NULL default '0',
+  pop_deleted int(2) NOT NULL default '0',
+  pop_deleteddate varchar(16) NOT NULL default '',
+  PRIMARY KEY  (pop_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_pop`
+--
+
+INSERT INTO dslprov_pop VALUES (1,'London',1,0,0,0);
+INSERT INTO dslprov_pop VALUES (2,'Manchester',1,0,0,0);
+INSERT INTO dslprov_pop VALUES (3,'Reading',1,0,0,0);
+INSERT INTO dslprov_pop VALUES (4,'Newcastle',1,0,0,0);
+
+--
+-- Table structure for table `dslprov_userbw`
+--
+
+CREATE TABLE dslprov_userbw (
+  userbw_id int(5) NOT NULL default '0',
+  userbw_value int(8) NOT NULL default '0',
+  PRIMARY KEY  (userbw_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_userbw`
+--
+
+INSERT INTO dslprov_userbw VALUES (1,150);
+INSERT INTO dslprov_userbw VALUES (2,256);
+INSERT INTO dslprov_userbw VALUES (3,512);
+INSERT INTO dslprov_userbw VALUES (4,1024);
+INSERT INTO dslprov_userbw VALUES (5,2048);
+
+--
+-- Table structure for table `dslprov_usercr`
+--
+
+CREATE TABLE dslprov_usercr (
+  usercr_id int(5) NOT NULL default '0',
+  usercr_value int(3) NOT NULL default '0',
+  PRIMARY KEY  (usercr_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_usercr`
+--
+
+INSERT INTO dslprov_usercr VALUES (1,1);
+INSERT INTO dslprov_usercr VALUES (2,5);
+INSERT INTO dslprov_usercr VALUES (3,10);
+INSERT INTO dslprov_usercr VALUES (4,20);
+INSERT INTO dslprov_usercr VALUES (5,25);
+INSERT INTO dslprov_usercr VALUES (6,30);
+INSERT INTO dslprov_usercr VALUES (7,50);
+
+--
+-- Table structure for table `dslprov_userrealm`
+--
+
+CREATE TABLE dslprov_userrealm (
+  userrealm_id int(11) NOT NULL default '0',
+  visp_id int(11) NOT NULL default '0',
+  userrealm_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (userrealm_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_userrealm`
+--
+
+
+--
+-- Table structure for table `dslprov_vc`
+--
+
+CREATE TABLE dslprov_vc (
+  vc_id int(11) NOT NULL default '0',
+  vp_id int(11) NOT NULL default '0',
+  vc_vci int(5) NOT NULL default '0',
+  batch_id varchar(11) NOT NULL default '0',
+  vc_cbuk varchar(32) NOT NULL default '',
+  vc_btaccountcode varchar(12) NOT NULL default '',
+  vc_refnum varchar(20) NOT NULL default '',
+  vc_visprefnum varchar(20) NOT NULL default '',
+  btuserordertype_id int(5) NOT NULL default '0',
+  btuserorderstate_id int(5) NOT NULL default '0',
+  vc_availreasoncode varchar(32) NOT NULL default '',
+  btproduct_id int(5) NOT NULL default '0',
+  vispproduct_id int(5) NOT NULL default '0',
+  vc_title varchar(32) NOT NULL default '',
+  vc_surname varchar(32) NOT NULL default '',
+  vc_firstname varchar(32) NOT NULL default '',
+  vc_initials varchar(4) NOT NULL default '',
+  vc_premisesname varchar(32) NOT NULL default '',
+  vc_houseno varchar(32) NOT NULL default '',
+  vc_street varchar(32) NOT NULL default '',
+  vc_city varchar(32) NOT NULL default '',
+  vc_postcode varchar(8) NOT NULL default '',
+  vc_cli varchar(16) NOT NULL default '',
+  vc_contactphone varchar(16) NOT NULL default '0',
+  vc_orderdate varchar(16) NOT NULL default '',
+  vc_reqdeliverydate varchar(16) NOT NULL default '',
+  vc_commitdate varchar(16) NOT NULL default '',
+  vc_installationdate varchar(16) NOT NULL default '',
+  vc_canceldate varchar(16) NOT NULL default '',
+  vc_productiondate varchar(16) NOT NULL default '',
+  vc_notes varchar(32) NOT NULL default '',
+  vc_resellernotes varchar(32) NOT NULL default '',
+  userbw_id int(5) NOT NULL default '0',
+  usercr_id int(5) NOT NULL default '0',
+  userrealm_id int(5) NOT NULL default '0',
+  vc_carelevel int(2) NOT NULL default '0',
+  vc_confirmations int(2) NOT NULL default '0',
+  vc_user varchar(32) NOT NULL default '',
+  vc_state int(2) NOT NULL default '0',
+  vc_statechangedate varchar(16) NOT NULL default '',
+  vc_deleted int(2) NOT NULL default '0',
+  vc_deleteddate varchar(16) NOT NULL default '',
+  PRIMARY KEY  (vc_id),
+  KEY vp_id (vp_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vc`
+--
+
+
+--
+-- Table structure for table `dslprov_vcavail`
+--
+
+CREATE TABLE dslprov_vcavail (
+  vca_id int(11) NOT NULL default '0',
+  vca_cli varchar(16) NOT NULL default '',
+  vca_user varchar(32) NOT NULL default '',
+  vca_errorid int(2) NOT NULL default '0',
+  vca_inputtype varchar(8) NOT NULL default '',
+  vca_fixedrate char(1) NOT NULL default '',
+  vca_rateadaptive char(1) NOT NULL default '',
+  vca_exchangecode varchar(7) NOT NULL default '',
+  vca_exchangename varchar(35) NOT NULL default '',
+  vca_reasoncode char(1) NOT NULL default '',
+  vca_readydate varchar(10) NOT NULL default '',
+  vca_exchangestate char(1) NOT NULL default '',
+  vca_trigger int(4) NOT NULL default '0',
+  vca_rtpc char(1) NOT NULL default '',
+  vca_postcode varchar(8) NOT NULL default '',
+  vca_caphome varchar(10) NOT NULL default '',
+  vca_capoffice varchar(10) NOT NULL default '',
+  vca_suggmesg varchar(255) NOT NULL default '',
+  vca_supplmesg varchar(255) NOT NULL default '',
+  vca_checkmode int(1) NOT NULL default '0',
+  PRIMARY KEY  (vca_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vcavail`
+--
+
+
+--
+-- Table structure for table `dslprov_vcorder`
+--
+
+CREATE TABLE dslprov_vcorder (
+  batch_id int(11) NOT NULL default '0',
+  vco_user varchar(32) NOT NULL default '',
+  vco_poissueddate varchar(20) NOT NULL default '',
+  vco_reqdeliverydate varchar(20) NOT NULL default '',
+  vco_btaccountcode varchar(12) NOT NULL default '',
+  vco_refnum int(11) NOT NULL default '0',
+  vco_agencyident varchar(20) NOT NULL default '',
+  vco_occontactname varchar(32) NOT NULL default '',
+  vco_octelephone varchar(16) NOT NULL default '',
+  vco_octitle varchar(32) NOT NULL default '',
+  vco_ocfirstname varchar(32) NOT NULL default '',
+  vco_ocinitials varchar(8) NOT NULL default '',
+  vco_supplierident varchar(32) NOT NULL default '',
+  vco_ocurrency varchar(8) NOT NULL default '',
+  vco_olang varchar(8) NOT NULL default '',
+  vco_partialship varchar(32) NOT NULL default '',
+  vco_areqornot varchar(32) NOT NULL default '',
+  vco_ordertype varchar(32) NOT NULL default '',
+  vco_lineitemnum int(5) NOT NULL default '0',
+  vco_btproductandtype varchar(32) NOT NULL default '',
+  vco_qty int(5) NOT NULL default '0',
+  vco_uom varchar(5) NOT NULL default '',
+  vco_seaid varchar(32) NOT NULL default '',
+  vco_seacontactname varchar(32) NOT NULL default '',
+  vco_seatelephone varchar(16) NOT NULL default '',
+  vco_seatitle varchar(32) NOT NULL default '',
+  vco_seafirstname varchar(32) NOT NULL default '',
+  vco_seainitials varchar(8) NOT NULL default '',
+  vco_sebpremisesname varchar(32) NOT NULL default '',
+  vco_sebtfnumber varchar(32) NOT NULL default '',
+  vco_sebtfname varchar(32) NOT NULL default '',
+  vco_sebposttown varchar(32) NOT NULL default '',
+  vco_sebpostcode varchar(32) NOT NULL default '',
+  vco_sebcontactname varchar(32) NOT NULL default '',
+  vco_sebtelephone varchar(16) NOT NULL default '',
+  vco_sebtitle varchar(32) NOT NULL default '',
+  vco_sebfirstname varchar(32) NOT NULL default '',
+  vco_sebinitials varchar(8) NOT NULL default '',
+  vco_carelevel varchar(32) NOT NULL default '',
+  vco_dsuk varchar(32) NOT NULL default '',
+  vco_nteaor char(2) NOT NULL default '',
+  vco_ntecaa char(2) NOT NULL default '',
+  vco_ntepd char(2) NOT NULL default '',
+  vco_ntekat char(2) NOT NULL default '',
+  vco_nterl char(2) NOT NULL default '',
+  vco_ntetelephone varchar(16) NOT NULL default '',
+  vco_ceasecbuk varchar(32) NOT NULL default '',
+  vco_rdd varchar(32) NOT NULL default '',
+  vco_uprice varchar(8) NOT NULL default '',
+  vco_totalprice varchar(8) NOT NULL default '',
+  PRIMARY KEY  (vco_refnum)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vcorder`
+--
+
+
+--
+-- Table structure for table `dslprov_vcordermessages`
+--
+
+CREATE TABLE dslprov_vcordermessages (
+  batch_id int(11) NOT NULL default '0',
+  vcom_refnum int(11) NOT NULL default '0',
+  vcom_complcode int(4) NOT NULL default '0',
+  vcom_complmesg varchar(255) NOT NULL default '',
+  vcom_complseverity varchar(64) NOT NULL default '',
+  PRIMARY KEY  (vcom_refnum)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vcordermessages`
+--
+
+
+--
+-- Table structure for table `dslprov_visp`
+--
+
+CREATE TABLE dslprov_visp (
+  visp_id int(11) NOT NULL default '0',
+  visp_name varchar(32) NOT NULL default '',
+  visp_repformat int(5) NOT NULL default '0',
+  visp_repflag int(5) NOT NULL default '0',
+  visp_carelevel int(5) NOT NULL default '0',
+  visp_emailtype int(5) NOT NULL default '0',
+  vispproduct_id int(11) NOT NULL default '0',
+  PRIMARY KEY  (visp_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_visp`
+--
+
+
+--
+-- Table structure for table `dslprov_vispemail`
+--
+
+CREATE TABLE dslprov_vispemail (
+  visp_id int(11) NOT NULL default '0',
+  vispemail_value varchar(64) NOT NULL default '',
+  PRIMARY KEY  (visp_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vispemail`
+--
+
+
+--
+-- Table structure for table `dslprov_vispproduct`
+--
+
+CREATE TABLE dslprov_vispproduct (
+  vispproduct_id int(5) NOT NULL default '0',
+  vispproduct_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (vispproduct_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vispproduct`
+--
+
+INSERT INTO dslprov_vispproduct VALUES (1,'IP 150');
+INSERT INTO dslprov_vispproduct VALUES (2,'IP 256');
+INSERT INTO dslprov_vispproduct VALUES (3,'IP 512');
+INSERT INTO dslprov_vispproduct VALUES (4,'IP 1024');
+INSERT INTO dslprov_vispproduct VALUES (5,'IP 2048');
+
+--
+-- Table structure for table `dslprov_vispuser`
+--
+
+CREATE TABLE dslprov_vispuser (
+  visp_id int(11) NOT NULL default '0',
+  vispuser_name varchar(64) NOT NULL default '',
+  vispuser_password varchar(64) NOT NULL default '',
+  PRIMARY KEY  (visp_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vispuser`
+--
+
+
+--
+-- Table structure for table `dslprov_vp`
+--
+
+CREATE TABLE dslprov_vp (
+  vp_id int(11) NOT NULL default '0',
+  cal_id int(11) NOT NULL default '0',
+  exchange_id varchar(8) NOT NULL default '',
+  vp_vpi int(5) NOT NULL default '0',
+  btvpordertype_id int(5) NOT NULL default '0',
+  btvporderstate_id int(5) NOT NULL default '0',
+  vp_dsuk varchar(32) NOT NULL default '',
+  vp_portres int(5) NOT NULL default '0',
+  vp_portordered int(5) NOT NULL default '0',
+  vp_portordereddate varchar(16) NOT NULL default '',
+  vp_portdemand int(5) NOT NULL default '0',
+  vpbw_id int(5) NOT NULL default '0',
+  vpbwordered_id int(5) NOT NULL default '0',
+  vp_bwordereddate varchar(16) NOT NULL default '',
+  vp_bwdemand int(8) NOT NULL default '0',
+  vptype_id int(5) NOT NULL default '0',
+  vp_orderdate varchar(16) NOT NULL default '',
+  vp_reqdeliverydate varchar(16) NOT NULL default '',
+  vp_commitdate varchar(16) NOT NULL default '',
+  vp_installationdate varchar(16) NOT NULL default '',
+  vp_canceldate varchar(16) NOT NULL default '',
+  vp_productiondate varchar(16) NOT NULL default '',
+  vp_state int(2) NOT NULL default '0',
+  vp_statechangedate varchar(16) NOT NULL default '',
+  vp_orderedstate int(2) NOT NULL default '0',
+  vp_orderedstatechangedate varchar(16) NOT NULL default '',
+  vp_updemandstate int(2) NOT NULL default '0',
+  vp_updemandstatechangedate varchar(16) NOT NULL default '',
+  vp_deleted int(2) NOT NULL default '0',
+  vp_deleteddate varchar(16) NOT NULL default '',
+  vp_preferred int(3) NOT NULL default '0',
+  PRIMARY KEY  (vp_id),
+  KEY cal_id (cal_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vp`
+--
+
+
+--
+-- Table structure for table `dslprov_vpbw`
+--
+
+CREATE TABLE dslprov_vpbw (
+  vpbw_id int(5) NOT NULL default '0',
+  vpbw_value int(8) NOT NULL default '0',
+  PRIMARY KEY  (vpbw_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vpbw`
+--
+
+INSERT INTO dslprov_vpbw VALUES (1,256);
+INSERT INTO dslprov_vpbw VALUES (2,512);
+INSERT INTO dslprov_vpbw VALUES (3,1024);
+INSERT INTO dslprov_vpbw VALUES (4,2048);
+INSERT INTO dslprov_vpbw VALUES (5,3072);
+INSERT INTO dslprov_vpbw VALUES (6,4096);
+INSERT INTO dslprov_vpbw VALUES (7,5120);
+INSERT INTO dslprov_vpbw VALUES (8,6144);
+INSERT INTO dslprov_vpbw VALUES (9,7168);
+INSERT INTO dslprov_vpbw VALUES (10,8192);
+INSERT INTO dslprov_vpbw VALUES (11,9216);
+INSERT INTO dslprov_vpbw VALUES (12,10240);
+
+--
+-- Table structure for table `dslprov_vptype`
+--
+
+CREATE TABLE dslprov_vptype (
+  vptype_id int(5) NOT NULL default '0',
+  vptype_value varchar(8) NOT NULL default '',
+  PRIMARY KEY  (vptype_id)
+) TYPE=InnoDB;
+
+--
+-- Dumping data for table `dslprov_vptype`
+--
+
+INSERT INTO dslprov_vptype VALUES (1,'CBR');
+INSERT INTO dslprov_vptype VALUES (2,'VBR');
+INSERT INTO dslprov_vptype VALUES (3,'VBRrt');
+
+
+
+
+
+CREATE TABLE dslprov_vcstate (
+  vcstate_id int(5) NOT NULL default '0',
+  vcstate_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (vcstate_id)
+) TYPE=InnoDB;
+
+--
+--
+
+INSERT INTO dslprov_vcstate VALUES (1,'BT_Error');
+INSERT INTO dslprov_vcstate VALUES (2,'Cancelled');
+INSERT INTO dslprov_vcstate VALUES (3,'Rejected');
+INSERT INTO dslprov_vcstate VALUES (4,'Ceased');
+INSERT INTO dslprov_vcstate VALUES (11,'New');
+INSERT INTO dslprov_vcstate VALUES (12,'Pending(BW)');
+INSERT INTO dslprov_vcstate VALUES (13,'Reserved');
+INSERT INTO dslprov_vcstate VALUES (21,'Pending(Ports)');
+INSERT INTO dslprov_vcstate VALUES (22,'Order_Prepare');
+INSERT INTO dslprov_vcstate VALUES (23,'Ordered');
+INSERT INTO dslprov_vcstate VALUES (24,'Committed');
+INSERT INTO dslprov_vcstate VALUES (25,'Installed');
+INSERT INTO dslprov_vcstate VALUES (26,'VCI_Issued');
+INSERT INTO dslprov_vcstate VALUES (27,'Productive');
+INSERT INTO dslprov_vcstate VALUES (31,'Cease_Prepare');
+
+
+CREATE TABLE dslprov_vpstate (
+  vpstate_id int(5) NOT NULL default '0',
+  vpstate_value varchar(32) NOT NULL default '',
+  PRIMARY KEY  (vpstate_id)
+) TYPE=InnoDB;
+
+
+
+INSERT INTO dslprov_vpstate VALUES (1,'BT_Error');
+INSERT INTO dslprov_vpstate VALUES (2,'Cancelled');
+INSERT INTO dslprov_vpstate VALUES (3,'Rejected');
+INSERT INTO dslprov_vpstate VALUES (4,'Ceased');
+INSERT INTO dslprov_vpstate VALUES (11,'New');
+INSERT INTO dslprov_vpstate VALUES (25,'VPI_Issued');
+INSERT INTO dslprov_vpstate VALUES (26,'Productive');
+INSERT INTO dslprov_vpstate VALUES (31,'Cease_Prepare');

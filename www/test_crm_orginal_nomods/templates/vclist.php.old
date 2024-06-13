@@ -1,0 +1,213 @@
+<?
+
+$bgcolor='ffeebb';
+
+// vcstate:
+// <=10 : not to be used in calc
+//
+//  1 : pending_bterror
+//  2 : cancelled
+//  3 : rejected
+//  4 : ceased
+
+// >10 : to be used in cli double
+//
+//  11: new
+//  12: pending (bw,crsum BW upgrade)
+//  13: reserved
+
+// >20 : to be used in calc
+//
+//  21: pending (ports Port upgrade)
+//  22: ordered
+//  23: committed (commitdate BT)
+//  24: installed (installdate BT)
+//  25: vci issued (prod BT)
+//  26: productive (configured)
+
+  echo("<center><table border=0><tr bgcolor=$tcolor0>");
+// VISP , Realm
+  echo("<td align=center nowrap><b>Surname</b></td>");
+  echo("<td align=center nowrap><b>Postcode</b></td>");
+  echo("<td align=center nowrap><b>CLI</b></td>");
+  echo("<td align=center nowrap><b>Street</b></td>");
+  echo("<td align=center nowrap><b>City</b></td>");
+  echo("<td align=center nowrap><b>Product</b></td>");
+  echo("<td align=center nowrap><b>Delivery Date</b></td>");
+  echo("<td align=center nowrap><b>State</b></td>");
+  echo("<td align=center nowrap><b>DSLAM</b></td>");
+  echo("<td align=center nowrap><b>Exchange</b></td>");
+  echo("<td align=center nowrap><b>Ex State</b></td>");
+  echo("<td align=center nowrap><b>EditC</b></td>");
+  echo("<td align=center nowrap><b>ShowC</b></td>");
+
+  $query="select vc_surname,vc_postcode,vc_cli,vc_street,vc_city,btproduct_id,userbw_id,usercr_id,vc_reqdeliverydate,vc_state,vc_vci,vp_id,vc_id from dslprov_vc where vc_state <22";
+
+  if ($action=='searchvc')
+    {
+    $sterror=0;
+    if ($vc_surname!='')
+      {
+      $st1="vc_surname like '%$vc_surname%'";
+      }
+    else
+      {
+      $st1=1;
+      $sterror++;
+      }
+    if ($vc_postcode!='')
+      {
+      $st2="vc_postcode like '$vc_postcode%'";
+      }
+    else
+      {
+      $st2=1;
+      $sterror++;
+      }
+    if ($vc_cli!='')
+      {
+      $st3="vc_cli like '$vc_cli%'";
+      }
+    else
+      {
+      $st3=1;
+      $sterror++;
+      }
+    if ($vc_reqdeliverydate!='')
+      {
+      $st4="vc_reqdeliverydate like '$vc_reqdeliverydate'";
+      }
+    else
+      {
+      $st4=1;
+      $sterror++;
+      }
+    if ($vc_installationdate!='')
+      {
+      $st5="vc_installationdate like '$vc_installationdate'";
+      }
+    else
+      {
+      $st5=1;
+      $sterror++;
+      }
+    if ($vc_productiondate!='')
+      {
+      $st6="vc_productiondate like '$vc_productiondate'";
+      }
+    else
+      {
+      $st6=1;
+      $sterror++;
+      }
+    if ($vc_orderdate!='')
+      {
+      $st7="vc_orderdate like '$vc_orderdate'";
+      }
+    else
+      {
+      $st7=1;
+      $sterror++;
+      }
+    if ($vc_state!='0')
+      {
+      $st8="vc_state like '$vc_state'";
+      }
+    else
+      {
+      $st8=1;
+      $sterror++;
+      }
+    if ($sterror==8) { $st2='0000000000'; }
+    $query="select vc_surname,vc_postcode,vc_cli,vc_street,vc_city,btproduct_id,userbw_id,usercr_id,vc_reqdeliverydate,vc_state,vc_vci,vp_id,vc_id from dslprov_vc where $st1 and $st2 and $st3 and $st4 and $st5 and $st6 and $st7 and $st8";
+
+// echo("$query");
+
+    }
+
+  else if ($action=='searchvc_ex') 
+    {
+    echo("<h3>Customers on exchange $exchange_id</h3>");
+//    $query="select t1.vc_surname,t1.vc_postcode,t1.vc_cli,t1.vc_street,t1.vc_city,t1.vc_cbuk,t1.userbw_id,t1.vc_reqdeliverydate,t1.vc_state,t1.vc_vci,t1.vp_id,t1.vc_id from dslprov_vc as t1, dslprov_vp as t2 where t2.exchange_id LIKE '$exchange_id' and t1.vp_id = t2.vp_id";
+    // ????
+    $query="select t1.vc_surname,t1.vc_postcode,t1.vc_cli,t1.vc_street,t1.vc_city,t1.btproduct_id,t1.userbw_id,t1.usercr_id,t1.vc_reqdeliverydate,t1.vc_state,t1.vc_vci,t1.vp_id,t1.vc_id from dslprov_vc as t1 left join dslprov_vp as t2 on t1.vp_id = t2.vp_id where t2.exchange_id LIKE '$exchange_id'";
+    }
+
+  else if ($action=='searchvc_cal') 
+    {
+    echo("<h3>Customers on CAL $cal_id</h3>");
+    // ????
+    $query="select t1.vc_surname,t1.vc_postcode,t1.vc_cli,t1.vc_street,t1.vc_city,t1.btproduct_id,t1.userbw_id,t1.usercr_id,t1.vc_reqdeliverydate,t1.vc_state,t1.vc_vci,t1.vp_id,t1.vc_id from dslprov_vc as t1 left join dslprov_vp as t2 on t1.vp_id = t2.vp_id where t2.cal_id LIKE '$cal_id'";
+    }
+// reporting fake
+  else if ($action=='last3')
+    {
+    $time=time();
+    $query="select vc_surname,vc_postcode,vc_cli,vc_street,vc_city,btproduct_id,userbw_id,usercr_id,vc_reqdeliverydate,vc_state,vc_vci,vp_id,vc_id from dslprov_vc where vc_state>21";
+    }
+
+  else if ($action=='ordertracking')
+    {
+    $query="select vc_surname,vc_postcode,vc_cli,vc_street,vc_city,btproduct_id,userbw_id,usercr_id,vc_reqdeliverydate,vc_state,vc_vci,vp_id,vc_id from dslprov_vc where vc_state>21 and vc_state<26";
+    }
+
+  $result=mysql_query($query);
+
+  for ($i=0;$i < mysql_num_rows($result);$i++)
+    {
+    $row = mysql_fetch_row($result);
+    $j=0;
+    echo("</tr><tr bgcolor=$bgcolor>");
+    foreach ($row as $value)
+      {
+      if ($j==5)
+        {
+        $t1value=get_btproduct($value);
+        }
+      else if (($j==7)||($j==10)) {}
+      else if ($j==6)
+        {
+        $tvalue=get_userbw($value);
+        $value="$t1value $tvalue";
+        echo("<td align=center>$value</td>");
+        }
+      else if ($j==9)
+        {
+        $tvalue=get_vcstate($value);
+        $value="$tvalue($value)";
+        echo("<td align=center>$value</td>");
+        }
+      else if ($j==11)
+        {
+        $query2="select * from dslprov_vp where vp_id LIKE '$value'";
+        $result2=mysql_query($query2);
+        $number2=mysql_num_rows($result2);
+        $rowarray=mysql_fetch_array($result2);
+
+        $vp_state=$rowarray['vp_state'];
+        $vp_state_value=get_vpstate($vp_state);
+        $cal_id=$rowarray['cal_id'];
+        $exchange_id=$rowarray['exchange_id'];
+        $vp_dsuk=$rowarray['vp_dsuk'];
+        $vp_vpi=$rowarray['vp_vpi'];
+     //   echo("<td align=center>$vp_vpi</td>");
+        echo("<td align=center>$vp_dsuk</td>");
+        echo("<td align=center><a href=index.php?page=1&action=searchvp_ex&query=$exchange_id>$exchange_id</a></td>");
+     //   echo("<td align=center><a href=index.php?page=1&action=searchvp_cal&query=$cal_id>$cal_id</td>");
+        echo("<td align=center>$vp_state_value($vp_state)</td>");
+        }
+      else if ($j==12)
+        {
+        echo("<td align=center><b><a href=index.php?page=3&action=vcupgrade&vc_id=$value>>Edit</a></b></td>");         
+        echo("<td align=center><b><a href=index.php?page=3&action=vcshow&vc_id=$value>>Show</a></b></td>");         
+        }
+      else
+        {
+        echo("<td align=center>$value</td>");
+        }
+      $j++;
+      }
+    }
+  echo("</tr></table></center>");
+     
+?>
